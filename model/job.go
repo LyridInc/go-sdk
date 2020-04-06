@@ -26,3 +26,10 @@ type Job struct {
 	LastUpdateTime time.Time     `json:"lastUpdateTime"`
 	Payload        string        `json:"payload"`
 }
+
+type JobInfo struct {
+	JobId   string    `json:"jobId" binding:"required"`
+	Message string    `json:"message" binding:"required"`
+	Type    string    `json:"type" binding:"required"`
+	Time    time.Time `json:"time"`
+}
