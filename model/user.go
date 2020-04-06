@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 type LyridUser struct {
 	Id              string    `json:"id" binding:"required"`
@@ -22,4 +25,12 @@ type Account struct {
 	Tier      int       `json:"tier" binding:"required"`
 	CreatedOn time.Time `json:"createdOn"`
 	CreatedBy string    `json:"createdBy"`
+}
+
+func (account *Account) GetBucketName() string {
+	return strings.ReplaceAll(account.Id, "-", "")
+}
+
+func (account *Account) GetS3BucketName(region string) string {
+	return "lyrid-lambda-" + account.GetBucketName() + "-" + region
 }

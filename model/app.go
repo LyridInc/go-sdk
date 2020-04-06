@@ -62,3 +62,34 @@ type FunctionCode struct {
 	CodeUri         string    `json:"codeUri"`
 	ImageUri        string    `json:"imageUri"`
 }
+
+// Definitions (this is used for the user to configure the app/modules/function
+
+type AppDefinition struct {
+	Name        string             `yaml:"name"`
+	Description string             `yaml:"description"`
+	Modules     []ModuleDefinition `yaml:"modules"`
+}
+
+type ModuleDefinition struct {
+	Name        string               `yaml:"name"`
+	Language    string               `yaml:"language"`
+	Description string               `yaml:"description"`
+	Functions   []FunctionDefinition `yaml:"functions"`
+}
+
+type FunctionDefinition struct {
+	Name        string `yaml:"name"`
+	Entry       string `yaml:"entry"`
+	Description string `yaml:"description"`
+}
+
+func (definition *ModuleDefinition) GetFileExtension() string {
+	if definition.Language == "go1.x" {
+		return "go"
+	} else if definition.Language == "python3.7" {
+		return "py"
+	}
+
+	return ""
+}
