@@ -26,6 +26,18 @@ type CloudVendorDefinition struct {
 	ImageUrl      string      `json:"imageUrl" binding:"required"`
 }
 
+type GlobalRegionDefinition struct {
+	ID   string `json:"id" binding:"required"`
+	Name string `json:"name" binding:"required"`
+
+	Description string `json:"description"`
+
+	Center *LngLatGeo `json:"center"`
+	Radius int        `json:"radius"`
+
+	RegionIDs []string `json:"regionIds"`
+}
+
 type CloudCredential struct {
 	Id             string      `json:"id" binding:"required"`
 	KeyId          string      `json:"keyId" binding:"required"`
