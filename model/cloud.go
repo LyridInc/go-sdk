@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type CloudVendor int
 
 const (
@@ -22,4 +24,60 @@ type CloudVendorDefinition struct {
 	ShortName     string      `json:"shortName" binding:"required"`
 	ParentCompany string      `json:"parentCompany" binding:"required"`
 	ImageUrl      string      `json:"imageUrl" binding:"required"`
+}
+
+type CloudCredential struct {
+	Id             string      `json:"id" binding:"required"`
+	KeyId          string      `json:"keyId" binding:"required"`
+	VendorID       CloudVendor `json:"vendorId" binding:"required"`
+	RelatedAccount string      `json:"relatedAccount" binding:"required"`
+	CreationTime   time.Time   `json:"creationTime" binding:"required"`
+	UseCount       int         `json:"useCount" binding:"required"`
+	Credential     []byte      `json:"credential" binding:"required"`
+}
+
+type FrameworkDefinition struct {
+	Name     string `json:"name" binding:"required"`
+	ImageUrl string `json:"imageUrl" binding:"required"`
+}
+
+type StorageDefinition struct {
+	Name     string `json:"name" binding:"required"`
+	ImageUrl string `json:"imageUrl" binding:"required"`
+
+	Type     string `json:"type" binding:"required"`
+	Endpoint string `json:"endpoint" binding:"required"`
+}
+
+type CloudRegionDefinition struct {
+	ID string `json:"id" binding:"required"`
+
+	VendorID CloudVendor `json:"vendorId" binding:"required"`
+
+	RegionID string `json:"regionId" binding:"required"`
+	Type     string `json:"type" binding:"required"`
+
+	Location *LngLatGeo `json:"location" binding:"required"`
+
+	Framework FrameworkDefinition `json:"framework" binding:"required"`
+	Storage   StorageDefinition   `json:"storage" binding:"required"`
+	//
+}
+
+type LngLatGeo struct {
+	Longitute float64 `json:"longitude"`
+	Latitude  float64 `json:"latitude"`
+
+	Address *LocationDescription `json:"address"`
+}
+
+type LocationDescription struct {
+	City          AddressName `json:"city"`
+	Country       AddressName `json:"country"`
+	StateProvince AddressName `json:"stateProvince"`
+}
+
+type AddressName struct {
+	LongName  string `json:"longName"`
+	ShortName string `json:"shortName"`
 }
