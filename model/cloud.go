@@ -36,6 +36,22 @@ type CloudCredential struct {
 	Credential     []byte      `json:"credential" binding:"required"`
 }
 
+type DeploymentEndpoint struct {
+	ID string `json:"id" binding:"required"`
+
+	CodeID   string      `json:"codeId" binding:"required"`
+	Name     string      `json:"name" binding:"required"`
+	Type     string      `json:"type" binding:"required"`
+	VendorID CloudVendor `json:"vendorId" binding:"required"`
+	RegionID string      `json:"regionId" binding:"required"`
+
+	Endpoint string        `json:"endpoint" binding:"required"`
+	Memory   string        `json:"memory" binding:"required"`
+	Timeout  time.Duration `json:"duration" binding:"required"`
+
+	Metadata string `json:"metadata"`
+}
+
 type FrameworkDefinition struct {
 	Name     string `json:"name" binding:"required"`
 	ImageUrl string `json:"imageUrl" binding:"required"`
