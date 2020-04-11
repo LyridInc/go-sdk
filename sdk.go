@@ -51,18 +51,18 @@ func pinglyridurl() error {
 
 func Initialize(access string, secret string) error {
 	// ping the
-	err := pinglyridurl()
+	//err := pinglyridurl()
 
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
+	//if err != nil {
+	//	fmt.Println(err)
+	//	return err
+	//}
 
 	// use
 	lyridaccess = access
 	lyridsecret = secret
 
-	_, err = login()
+	_, err := login()
 	if err != nil {
 		fmt.Println(err)
 		return err
