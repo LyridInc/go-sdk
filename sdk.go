@@ -3,40 +3,58 @@ package sdk
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/LyridInc/go-sdk/client"
 	"github.com/LyridInc/go-sdk/model"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/tatsushid/go-fastping"
 	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"path"
+	"sync"
 	"time"
 )
 
-var (
-	lyridurl    = "app.lyrid.io"
-	lyridaccess = ""
-	lyridsecret = ""
+type LyridClient struct {
+	mux sync.Mutex
 
-	lyridtoken = ""
-)
-
-func Hello() string {
-	return "Hello, world."
+	isUploading bool
+	token       string
+	lyridurl    string
+	lyridaccess string
+	lyridsecret string
 }
 
-func GetLyridURL() string {
-	return lyridurl
+var instance *LyridClient
+var once sync.Once
+
+func GetInstance() *LyridClient {
+	once.Do(func() {
+		instance = &LyridClient{}
+	})
+	return instance
 }
 
-func SetLyridURL(url string) {
-	lyridurl = url
+func (client *LyridClient) GetLyridURL() string {
+	if client.lyridurl == "" {
+		client.lyridurl = "api.lyrid.io"
+	}
+
+	return client.lyridurl
+}
+
+func (client *LyridClient) SetLyridURL(url string) {
+	client.lyridurl = url
 }
 
 func pinglyridurl() error {
+
+	client := GetInstance()
 	p := fastping.NewPinger()
-	ra, err := net.ResolveIPAddr("ip4:icmp", lyridurl)
+	ra, err := net.ResolveIPAddr("ip4:icmp", client.lyridurl)
 	if err != nil {
 		return err
 	}
@@ -49,7 +67,7 @@ func pinglyridurl() error {
 	return nil
 }
 
-func Initialize(access string, secret string) error {
+func (client *LyridClient) Initialize(access string, secret string) error {
 	// ping the
 	err := pinglyridurl()
 
@@ -59,36 +77,90 @@ func Initialize(access string, secret string) error {
 	}
 
 	// use
-	lyridaccess = access
-	lyridsecret = secret
+	client.lyridaccess = access
+	client.lyridsecret = secret
 
-	_, err = login()
+	_, err = client.login()
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
 
-	fmt.Println(lyridtoken)
+	fmt.Println(client.token)
 
 	//validatetoken()
 	return nil
 }
 
-func GetUserProfile() *model.LyridUser {
+func (lc *LyridClient) GetUserProfile() *model.LyridUser {
+	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
+	if lc.checktoken() {
+		response, err := cli.Get("api/user")
+		if err == nil {
+			if response.StatusCode == 200 {
+				var user model.LyridUser
+				databyte, _ := ioutil.ReadAll(response.Body)
+				json.Unmarshal(databyte, &user)
+				return &user
+			}
+		}
+	}
+
 	return nil
 }
 
-func checktoken() bool {
-	if istokenexpired() {
-		login()
-		return istokenexpired()
+func (lc *LyridClient) GetAccountProfile() []*model.Account {
+	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
+	if lc.checktoken() {
+		response, err := cli.Get("api/accounts")
+		if err == nil {
+			if response.StatusCode == 200 {
+				var accounts []*model.Account
+				databyte, _ := ioutil.ReadAll(response.Body)
+				json.Unmarshal(databyte, &accounts)
+				return accounts
+			}
+		}
+	}
+
+	return nil
+}
+
+func (lc *LyridClient) GetApps() []*model.App {
+	// tbd
+	return nil
+}
+
+func (lc *LyridClient) GetModules(AppId string) []*model.App {
+	// tbd
+	return nil
+}
+
+func (lc *LyridClient) GetRevisions(AppId string, ModuleId string) []*model.ModuleRevision {
+	// tbd
+	return nil
+}
+
+func (lc *LyridClient) GetFunctions(AppId string, ModuleId string, RevisionId string) []*model.Function {
+	// tbd
+	return nil
+}
+
+func (lc *LyridClient) ExecuteFunction(FunctionId string, Body string) {
+	// tbd
+}
+
+func (client *LyridClient) checktoken() bool {
+	if client.istokenexpired() {
+		client.login()
+		return client.istokenexpired()
 	}
 
 	return false
 }
 
-func istokenexpired() bool {
-	token, _, err := new(jwt.Parser).ParseUnverified(lyridtoken, jwt.MapClaims{})
+func (client *LyridClient) istokenexpired() bool {
+	token, _, err := new(jwt.Parser).ParseUnverified(client.token, jwt.MapClaims{})
 	if err != nil {
 		fmt.Println(err)
 		return true
@@ -115,21 +187,23 @@ func istokenexpired() bool {
 	return false
 }
 
-func login() (string, error) {
-
-	jsonData := map[string]string{"key": lyridaccess, "secret": lyridsecret}
+func (client *LyridClient) login() (string, error) {
+	jsonData := map[string]string{"key": client.lyridaccess, "secret": client.lyridsecret}
 	jsonValue, _ := json.Marshal(jsonData)
-	response, err := http.Post("https://"+path.Join(GetLyridURL(), "auth"), "application/json", bytes.NewBuffer(jsonValue))
+	response, err := http.Post("https://"+path.Join(client.GetLyridURL(), "auth"), "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
-		fmt.Printf("The HTTP request to Lyrid Server failed. %s\n", err)
+		log.Println("The HTTP request to Lyrid Server failed. %s\n", err)
 		return "", err
 	} else {
-		var config model.UserAccessToken
 		databyte, _ := ioutil.ReadAll(response.Body)
-		json.Unmarshal(databyte, &config)
-
-		lyridtoken = config.Token
-
-		return config.Token, nil
+		if response.StatusCode == 200 {
+			var config model.UserAccessToken
+			json.Unmarshal(databyte, &config)
+			client.token = config.Token
+			return config.Token, nil
+		} else {
+			log.Println("The HTTP request to Lyrid Server failed. %s\n", string(databyte))
+			return "", errors.New(string(databyte))
+		}
 	}
 }
