@@ -128,26 +128,92 @@ func (lc *LyridClient) GetAccountProfile() []*model.Account {
 
 func (lc *LyridClient) GetApps() []*model.App {
 	// tbd
+	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
+	if lc.checktoken() {
+		response, err := cli.Get("api/serverless/app/get")
+		if err == nil {
+			if response.StatusCode == 200 {
+				var apps []*model.App
+				databyte, _ := ioutil.ReadAll(response.Body)
+				json.Unmarshal(databyte, &apps)
+				return apps
+			}
+		}
+	}
 	return nil
 }
 
-func (lc *LyridClient) GetModules(AppId string) []*model.App {
-	// tbd
+func (lc *LyridClient) GetModules(AppId string) []*model.Module {
+	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
+	if lc.checktoken() {
+		response, err := cli.Get("api/serverless/app/get/" + AppId)
+		if err == nil {
+			if response.StatusCode == 200 {
+				var modules []*model.Module
+				databyte, _ := ioutil.ReadAll(response.Body)
+				json.Unmarshal(databyte, &modules)
+				return modules
+			}
+		}
+	}
 	return nil
 }
 
 func (lc *LyridClient) GetRevisions(AppId string, ModuleId string) []*model.ModuleRevision {
-	// tbd
+	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
+	if lc.checktoken() {
+		response, err := cli.Get("api/serverless/app/get/" + AppId + "/" + ModuleId)
+		if err == nil {
+			if response.StatusCode == 200 {
+				var revisions []*model.ModuleRevision
+				databyte, _ := ioutil.ReadAll(response.Body)
+				json.Unmarshal(databyte, &revisions)
+				return revisions
+			}
+		}
+	}
 	return nil
 }
 
 func (lc *LyridClient) GetFunctions(AppId string, ModuleId string, RevisionId string) []*model.Function {
-	// tbd
+	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
+	if lc.checktoken() {
+		response, err := cli.Get("api/serverless/app/get/" + AppId + "/" + ModuleId + "/" + RevisionId)
+		if err == nil {
+			if response.StatusCode == 200 {
+				var functions []*model.Function
+				databyte, _ := ioutil.ReadAll(response.Body)
+				json.Unmarshal(databyte, &functions)
+				return functions
+			}
+		}
+	}
 	return nil
 }
 
-func (lc *LyridClient) ExecuteFunction(FunctionId string, Body string) {
-	// tbd
+func (lc *LyridClient) ExecuteFunction(FunctionId string, Framework string, Body string) interface{} {
+	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
+	if lc.checktoken() {
+		response, err := cli.Post("api/serverless/app/execute/"+FunctionId+"/"+Framework, Body)
+		if err == nil {
+			if response.StatusCode == 200 {
+				var retValue interface{}
+				databyte, _ := ioutil.ReadAll(response.Body)
+				json.Unmarshal(databyte, &retValue)
+				return retValue
+			}
+		}
+	}
+
+	return nil
+}
+
+func (lc *LyridClient) GetAccountPolicies() []*model.Policy {
+	return nil
+}
+
+func (lc *LyridClient) GetModulePolicies(ModuleId string) []*model.Policy {
+	return nil
 }
 
 func (client *LyridClient) checktoken() bool {
@@ -167,7 +233,7 @@ func (client *LyridClient) istokenexpired() bool {
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
-		fmt.Println(claims["exp"])
+
 		var tm time.Time
 		switch iat := claims["iat"].(type) {
 		case float64:
@@ -192,7 +258,7 @@ func (client *LyridClient) login() (string, error) {
 	jsonValue, _ := json.Marshal(jsonData)
 	response, err := http.Post("https://"+path.Join(client.GetLyridURL(), "auth"), "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
-		log.Println("The HTTP request to Lyrid Server failed. %s\n", err)
+		log.Println("The HTTP request to Lyrid Server failed.\n", err)
 		return "", err
 	} else {
 		databyte, _ := ioutil.ReadAll(response.Body)
@@ -202,7 +268,7 @@ func (client *LyridClient) login() (string, error) {
 			client.token = config.Token
 			return config.Token, nil
 		} else {
-			log.Println("The HTTP request to Lyrid Server failed. %s\n", string(databyte))
+			log.Println("The HTTP request to Lyrid Server failed.\n", string(databyte))
 			return "", errors.New(string(databyte))
 		}
 	}
