@@ -1,9 +1,12 @@
 package sdk
 
-import "testing"
+import (
+	"os"
+	"testing"
+)
 
 func TestInitialize(t *testing.T) {
-	if got := GetInstance().Initialize("", ""); got != nil {
+	if got := GetInstance().Initialize(os.Getenv("LYRID_ACCESS"), os.Getenv("LYRID_SECRET")); got != nil {
 		t.Errorf("Error Initializing() = %s", got)
 	}
 }
@@ -67,6 +70,6 @@ func TestGetFunctions(t *testing.T) {
 	}
 }
 func TestGetFunctionExecute(t *testing.T) {
-	got := GetInstance().ExecuteFunction("", "LYR", "{\"InputSample\":\"Hello\"}")
-	t.Log(got)
+	got, _ := GetInstance().ExecuteFunction("", "LYR", "{\"InputSample\":\"Hello\"}")
+	t.Log(string(got))
 }

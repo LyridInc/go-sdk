@@ -13,6 +13,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"path"
 	"sync"
 	"time"
@@ -33,7 +34,7 @@ var once sync.Once
 
 func GetInstance() *LyridClient {
 	once.Do(func() {
-		instance = &LyridClient{}
+		instance = &LyridClient{lyridaccess: os.Getenv("LYRID_ACCESS"), lyridsecret: os.Getenv("LYRID_SECRET")}
 	})
 	return instance
 }
@@ -191,21 +192,20 @@ func (lc *LyridClient) GetFunctions(AppId string, ModuleId string, RevisionId st
 	return nil
 }
 
-func (lc *LyridClient) ExecuteFunction(FunctionId string, Framework string, Body string) interface{} {
+func (lc *LyridClient) ExecuteFunction(FunctionId string, Framework string, Body string) ([]byte, error) {
 	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
 	if lc.checktoken() {
 		response, err := cli.Post("api/serverless/app/execute/"+FunctionId+"/"+Framework, Body)
 		if err == nil {
 			if response.StatusCode == 200 {
-				var retValue interface{}
-				databyte, _ := ioutil.ReadAll(response.Body)
-				json.Unmarshal(databyte, &retValue)
-				return retValue
+				defer response.Body.Close()
+				return ioutil.ReadAll(response.Body)
 			}
+		} else {
+			return nil, err
 		}
 	}
-
-	return nil
+	return nil, errors.New("Unable to execute function.")
 }
 
 func (lc *LyridClient) GetAccountPolicies() []*model.Policy {
