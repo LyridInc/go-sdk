@@ -69,26 +69,16 @@ func pinglyridurl() error {
 }
 
 func (client *LyridClient) Initialize(access string, secret string) error {
-	// ping the
-	err := pinglyridurl()
-
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
 
 	// use
 	client.lyridaccess = access
 	client.lyridsecret = secret
 
-	_, err = client.login()
+	_, err := client.login()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return err
 	}
-
-	fmt.Println(client.token)
-
 	//validatetoken()
 	return nil
 }
