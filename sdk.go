@@ -46,6 +46,11 @@ func (client *LyridClient) SimulateServerless(url string) {
 	client.simulatedexecuteurl = url
 }
 
+func (client *LyridClient) DisableSimulate() {
+	client.simulateserverless = false
+	client.simulatedexecuteurl = ""
+}
+
 func (client *LyridClient) GetLyridURL() string {
 	if client.lyridurl == "" {
 		client.lyridurl = "https://api.lyrid.io"
