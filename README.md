@@ -26,5 +26,15 @@ Usage:
 
 <code>
 sdk.GetInstance().GetUserProfile()
+</code>
+
+
+<code>
 sdk.GetInstance().GetAccountProfile()
 </code>
+
+Simulating Serverless Function
+
+The SDK allows you to simulates serverless function on a local machines by pointing to an endpoint instead of a Lyrid Serverless Function for development.
+
+This helps the transition from local build into serverless functions to be seamless.  

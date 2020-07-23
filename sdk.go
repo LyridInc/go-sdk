@@ -14,7 +14,6 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"path"
 	"sync"
 	"time"
 )
@@ -27,6 +26,9 @@ type LyridClient struct {
 	lyridurl    string
 	lyridaccess string
 	lyridsecret string
+
+	simulateserverless  bool
+	simulatedexecuteurl string
 }
 
 var instance *LyridClient
@@ -34,14 +36,19 @@ var once sync.Once
 
 func GetInstance() *LyridClient {
 	once.Do(func() {
-		instance = &LyridClient{lyridaccess: os.Getenv("LYRID_ACCESS"), lyridsecret: os.Getenv("LYRID_SECRET")}
+		instance = &LyridClient{lyridaccess: os.Getenv("LYRID_ACCESS"), lyridsecret: os.Getenv("LYRID_SECRET"), simulateserverless: false}
 	})
 	return instance
 }
 
+func (client *LyridClient) SimulateServerless(url string) {
+	client.simulateserverless = true
+	client.simulatedexecuteurl = url
+}
+
 func (client *LyridClient) GetLyridURL() string {
 	if client.lyridurl == "" {
-		client.lyridurl = "api.lyrid.io"
+		client.lyridurl = "https://api.lyrid.io"
 	}
 
 	return client.lyridurl
@@ -74,7 +81,13 @@ func (client *LyridClient) Initialize(access string, secret string) error {
 	client.lyridaccess = access
 	client.lyridsecret = secret
 
-	_, err := client.login()
+	err := client.GetLyraVersion()
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	_, err = client.login()
 	if err != nil {
 		log.Println(err)
 		return err
@@ -83,10 +96,27 @@ func (client *LyridClient) Initialize(access string, secret string) error {
 	return nil
 }
 
+func (lc *LyridClient) GetLyraVersion() error {
+	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: ""}
+	response, err := cli.Get("/version")
+	if err == nil {
+		if response.StatusCode != 200 {
+			var user model.LyridUser
+			databyte, _ := ioutil.ReadAll(response.Body)
+			json.Unmarshal(databyte, &user)
+			return errors.New(string(databyte))
+		}
+	} else {
+		return err
+	}
+	return nil
+
+}
+
 func (lc *LyridClient) GetUserProfile() *model.LyridUser {
 	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
 	if lc.checktoken() {
-		response, err := cli.Get("api/user")
+		response, err := cli.Get("/api/user")
 		if err == nil {
 			if response.StatusCode == 200 {
 				var user model.LyridUser
@@ -103,7 +133,7 @@ func (lc *LyridClient) GetUserProfile() *model.LyridUser {
 func (lc *LyridClient) GetAccountProfile() []*model.Account {
 	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
 	if lc.checktoken() {
-		response, err := cli.Get("api/accounts")
+		response, err := cli.Get("/api/accounts")
 		if err == nil {
 			if response.StatusCode == 200 {
 				var accounts []*model.Account
@@ -121,7 +151,7 @@ func (lc *LyridClient) GetApps() []*model.App {
 	// tbd
 	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
 	if lc.checktoken() {
-		response, err := cli.Get("api/serverless/app/get")
+		response, err := cli.Get("/api/serverless/app/get")
 		if err == nil {
 			if response.StatusCode == 200 {
 				var apps []*model.App
@@ -137,7 +167,7 @@ func (lc *LyridClient) GetApps() []*model.App {
 func (lc *LyridClient) GetModules(AppId string) []*model.Module {
 	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
 	if lc.checktoken() {
-		response, err := cli.Get("api/serverless/app/get/" + AppId)
+		response, err := cli.Get("/api/serverless/app/get/" + AppId)
 		if err == nil {
 			if response.StatusCode == 200 {
 				var modules []*model.Module
@@ -153,7 +183,7 @@ func (lc *LyridClient) GetModules(AppId string) []*model.Module {
 func (lc *LyridClient) GetRevisions(AppId string, ModuleId string) []*model.ModuleRevision {
 	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
 	if lc.checktoken() {
-		response, err := cli.Get("api/serverless/app/get/" + AppId + "/" + ModuleId)
+		response, err := cli.Get("/api/serverless/app/get/" + AppId + "/" + ModuleId)
 		if err == nil {
 			if response.StatusCode == 200 {
 				var revisions []*model.ModuleRevision
@@ -169,7 +199,7 @@ func (lc *LyridClient) GetRevisions(AppId string, ModuleId string) []*model.Modu
 func (lc *LyridClient) GetFunctions(AppId string, ModuleId string, RevisionId string) []*model.Function {
 	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
 	if lc.checktoken() {
-		response, err := cli.Get("api/serverless/app/get/" + AppId + "/" + ModuleId + "/" + RevisionId)
+		response, err := cli.Get("/api/serverless/app/get/" + AppId + "/" + ModuleId + "/" + RevisionId)
 		if err == nil {
 			if response.StatusCode == 200 {
 				var functions []*model.Function
@@ -184,8 +214,13 @@ func (lc *LyridClient) GetFunctions(AppId string, ModuleId string, RevisionId st
 
 func (lc *LyridClient) ExecuteFunction(FunctionId string, Framework string, Body string) ([]byte, error) {
 	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
+
+	if lc.simulateserverless {
+		cli.LyraUrl = lc.simulatedexecuteurl
+	}
+
 	if lc.checktoken() {
-		response, err := cli.Post("api/serverless/app/execute/"+FunctionId+"/"+Framework, Body)
+		response, err := cli.Post(lc.geturl("/api/serverless/app/execute/"+FunctionId+"/"+Framework), Body)
 		if err == nil {
 			if response.StatusCode == 200 {
 				defer response.Body.Close()
@@ -198,6 +233,14 @@ func (lc *LyridClient) ExecuteFunction(FunctionId string, Framework string, Body
 	return nil, errors.New("Unable to execute function.")
 }
 
+func (lc *LyridClient) geturl(path string) string {
+	if lc.simulateserverless {
+		return ""
+	} else {
+		return path
+	}
+}
+
 func (lc *LyridClient) GetAccountPolicies() []*model.Policy {
 	return nil
 }
@@ -207,6 +250,10 @@ func (lc *LyridClient) GetModulePolicies(ModuleId string) []*model.Policy {
 }
 
 func (client *LyridClient) checktoken() bool {
+	if client.simulateserverless {
+		return true
+	}
+
 	if client.istokenexpired() {
 		client.login()
 		return client.istokenexpired()
@@ -244,9 +291,14 @@ func (client *LyridClient) istokenexpired() bool {
 }
 
 func (client *LyridClient) login() (string, error) {
+	if client.simulateserverless {
+		return "token_string", nil
+	}
+
 	jsonData := map[string]string{"key": client.lyridaccess, "secret": client.lyridsecret}
 	jsonValue, _ := json.Marshal(jsonData)
-	response, err := http.Post("https://"+path.Join(client.GetLyridURL(), "auth"), "application/json", bytes.NewBuffer(jsonValue))
+
+	response, err := http.Post(client.GetLyridURL()+"/auth", "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
 		log.Println("The HTTP request to Lyrid Server failed.\n", err)
 		return "", err
