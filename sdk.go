@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/LyridInc/go-sdk/client"
 	"github.com/LyridInc/go-sdk/model"
 	"github.com/dgrijalva/jwt-go"
@@ -264,32 +263,44 @@ func (client *LyridClient) checktoken() bool {
 		return client.istokenexpired()
 	}
 
-	return false
+	return true
 }
 
 func (client *LyridClient) istokenexpired() bool {
+	if client.token == "" {
+		log.Println("no token assigned")
+		return true
+	}
+
 	token, _, err := new(jwt.Parser).ParseUnverified(client.token, jwt.MapClaims{})
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return true
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		err = claims.Valid()
+		if err != nil {
+			log.Println(err)
+		} else {
+			// just renew token every 6 hours
+			var tm time.Time
+			switch iat := claims["iat"].(type) {
+			case float64:
+				tm = time.Unix(int64(iat), 0)
+			case json.Number:
+				v, _ := iat.Int64()
+				tm = time.Unix(v, 0)
+			}
 
-		var tm time.Time
-		switch iat := claims["iat"].(type) {
-		case float64:
-			tm = time.Unix(int64(iat), 0)
-		case json.Number:
-			v, _ := iat.Int64()
-			tm = time.Unix(v, 0)
-		}
+			if tm.Add(time.Hour * 6).Before(time.Now()) {
+				return true
+			}
 
-		if time.Now().After(tm) {
-			return true
+			return false
 		}
 	} else {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	return false
