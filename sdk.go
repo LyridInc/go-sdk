@@ -156,6 +156,7 @@ func (lc *LyridClient) GetAccountProfile() []*model.Account {
 func (lc *LyridClient) GetApps() []*model.App {
 	// tbd
 	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
+	fmt.Println("Token: ",lc.token)
 	if lc.checktoken() {
 		response, err := cli.Get("/api/serverless/app/get")
 		if err == nil {
@@ -257,14 +258,14 @@ func (lc *LyridClient) ExecuteFunction(FunctionId string, Framework string, Body
 }
 // POST /execute/:appname/:modulename/:tag/:functionname
 func (lc *LyridClient) ExecuteFunctionByName(AppName string, ModuleName string, Tag string, FunctionName string, Body string) ([]byte, error) {
-	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
+	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token, Access: model.UserAccessToken{Key: lc.lyridaccess, Secret: lc.lyridsecret}}
 
 	if lc.simulateserverless {
 		cli.LyraUrl = lc.simulatedexecuteurl
 	}
 
 	if lc.checktoken() {
-		response, err := cli.Post(lc.geturl("/execute/"+AppName+"/"+ModuleName+"/"+Tag+"/"+FunctionName), Body)
+		response, err := cli.PostBasicAuth(lc.geturl("/x/"+AppName+"/"+ModuleName+"/"+Tag+"/"+FunctionName), Body)
 		if err == nil {
 			if response.StatusCode == 200 {
 				defer response.Body.Close()
