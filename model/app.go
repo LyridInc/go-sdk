@@ -84,6 +84,22 @@ type FunctionDefinition struct {
 	Description string `yaml:"description"`
 }
 
+type PublishedApp struct {
+	ID 			string `json:"globalId"`
+	Name		string `json:"name"`
+	Version 	string `json:"version"`
+	Visibility 	string `json:"visibility"`
+	SharedWith 	[]string `json:"sharedwith"`
+	Tier 		string `json:"tier"`
+	ImageUrl 	string `json:"imageUrl"`
+	SupportUrl 	string `json:"supportUrl"`
+	TermUrl 	string `json:"termUrl"`
+	TagIds 		[]string `json:"tagids"`
+	CreatedBy 	string `json:"createdby"`
+	CreatedTime time.Time `json:"createTime"`
+	LastUpdate 	time.Time `json:"lastUpdate"`
+}
+
 func (definition *ModuleDefinition) GetFileExtension() string {
 	if definition.Language == "go1.x" {
 		return "go"

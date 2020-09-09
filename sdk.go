@@ -4,10 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/LyridInc/go-sdk/client"
-	"github.com/LyridInc/go-sdk/model"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/tatsushid/go-fastping"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
@@ -15,6 +12,11 @@ import (
 	"os"
 	"sync"
 	"time"
+
+	"github.com/LyridInc/go-sdk/client"
+	"github.com/LyridInc/go-sdk/model"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/tatsushid/go-fastping"
 )
 
 type LyridClient struct {
@@ -154,11 +156,29 @@ func (lc *LyridClient) GetAccountProfile() []*model.Account {
 func (lc *LyridClient) GetApps() []*model.App {
 	// tbd
 	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
+	fmt.Println("Token: ",lc.token)
 	if lc.checktoken() {
 		response, err := cli.Get("/api/serverless/app/get")
 		if err == nil {
 			if response.StatusCode == 200 {
 				var apps []*model.App
+				databyte, _ := ioutil.ReadAll(response.Body)
+				json.Unmarshal(databyte, &apps)
+				return apps
+			}
+		}
+	}
+	return nil
+}
+
+func (lc *LyridClient) GetPublishedApps() []*model.PublishedApp {
+	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
+	fmt.Println("Token:", lc.token)
+	if lc.checktoken() {
+		response, err := cli.Get("/api/serverless/install/")
+		if err == nil {
+			if response.StatusCode == 200 {
+				var apps []*model.PublishedApp
 				databyte, _ := ioutil.ReadAll(response.Body)
 				json.Unmarshal(databyte, &apps)
 				return apps
@@ -225,6 +245,27 @@ func (lc *LyridClient) ExecuteFunction(FunctionId string, Framework string, Body
 
 	if lc.checktoken() {
 		response, err := cli.Post(lc.geturl("/api/serverless/app/execute/"+FunctionId+"/"+Framework), Body)
+		if err == nil {
+			if response.StatusCode == 200 {
+				defer response.Body.Close()
+				return ioutil.ReadAll(response.Body)
+			}
+		} else {
+			return nil, err
+		}
+	}
+	return nil, errors.New("Unable to execute function.")
+}
+// POST /execute/:appname/:modulename/:tag/:functionname
+func (lc *LyridClient) ExecuteFunctionByName(AppName string, ModuleName string, Tag string, FunctionName string, Body string) ([]byte, error) {
+	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token, Access: model.UserAccessToken{Key: lc.lyridaccess, Secret: lc.lyridsecret}}
+
+	if lc.simulateserverless {
+		cli.LyraUrl = lc.simulatedexecuteurl
+	}
+
+	if lc.checktoken() {
+		response, err := cli.PostBasicAuth(lc.geturl("/x/"+AppName+"/"+ModuleName+"/"+Tag+"/"+FunctionName), Body)
 		if err == nil {
 			if response.StatusCode == 200 {
 				defer response.Body.Close()

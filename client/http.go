@@ -33,3 +33,13 @@ func (client *HTTPClient) Post(uri string, body string) (*http.Response, error) 
 	req.Header.Add("Authorization", "Bearer "+client.Token)
 	return httpclient.Do(req)
 }
+
+func (client *HTTPClient) PostBasicAuth(uri string, body string) (*http.Response, error) {
+	httpclient := &http.Client{}
+	req, err := http.NewRequest("POST", client.LyraUrl+uri, bytes.NewBuffer([]byte(body)))
+	if err != nil {
+		return nil, err
+	}
+	req.SetBasicAuth(client.Access.Key, client.Access.Secret)
+	return httpclient.Do(req)
+}
