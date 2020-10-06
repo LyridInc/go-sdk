@@ -14,13 +14,15 @@ type App struct {
 }
 
 type Module struct {
-	ID        string `json:"id"  binding:"required"`
-	AppId     string `json:"appId"  binding:"required"`
-	Name      string `json:"name"  binding:"required"`
-	Language  string `json:"language" binding:"required"`
-	CreatedBy string `json:"createdBy" binding:"required"`
+	ID          string   `json:"id"  binding:"required"`
+	AppId       string   `json:"appId"  binding:"required"`
+	Name        string   `json:"name"  binding:"required"`
+	Language    string   `json:"language" binding:"required"`
+	Web         string   `json:"web"`
+	Description string   `json:"description"`
+	Tags        []string `json:"tags"`
 
-	Description  string    `json:"description"`
+	CreatedBy    string    `json:"createdBy" binding:"required"`
 	LastActivity time.Time `json:"lastActivity""`
 	LastUpdate   time.Time `json:"lastUpdate""`
 }
