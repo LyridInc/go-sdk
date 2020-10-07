@@ -106,7 +106,7 @@ type PublishedApp struct {
 func (definition *ModuleDefinition) GetFileExtension() string {
 	if definition.Language == "go1.x" {
 		return "go"
-	} else if definition.Language == "python3.7" {
+	} else if definition.Language == "python3.7" || definition.Language == "python3.8" {
 		return "py"
 	} else if definition.Language == "nodejs12.x" {
 		return "js"
