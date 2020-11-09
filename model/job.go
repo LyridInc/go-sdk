@@ -22,6 +22,7 @@ type Job struct {
 	AccountId      string        `json:"accountId" binding:"required"`
 	Type           string        `json:"type" binding:"required"`
 	Status         JobStatusEnum `json:"status" binding:"required"`
+	Subject        string        `json:"subject"`
 	CreationTime   time.Time     `json:"creationTime"`
 	LastUpdateTime time.Time     `json:"lastUpdateTime"`
 	Payload        string        `json:"payload"`

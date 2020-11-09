@@ -63,6 +63,8 @@ type FunctionCode struct {
 	CreationTime    time.Time `json:"creationTime"`
 	CodeUri         string    `json:"codeUri"`
 	ImageUri        string    `json:"imageUri"`
+
+	ArtifactSizeByte int64 `json:"artifactSizeByte"`
 }
 
 // Definitions (this is used for the user to configure the app/modules/function
