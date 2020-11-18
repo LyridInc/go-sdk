@@ -76,11 +76,12 @@ type AppDefinition struct {
 }
 
 type ModuleDefinition struct {
-	Name        string               `yaml:"name"`
-	Language    string               `yaml:"language"`
-	Description string               `yaml:"description"`
-	Web         string               `yaml:"web"`
-	Functions   []FunctionDefinition `yaml:"functions"`
+	Name          string               `yaml:"name"`
+	Language      string               `yaml:"language"`
+	Description   string               `yaml:"description"`
+	Web           string               `yaml:"web"`
+	ProjectFolder string               `yaml:"projectFolder"` // currently only used inside dotnet core project only, but technically this works on other languages
+	Functions     []FunctionDefinition `yaml:"functions"`
 }
 
 type FunctionDefinition struct {
