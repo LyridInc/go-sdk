@@ -24,19 +24,22 @@ type Policy struct {
 	PolicyType string `json:"policyType"`
 	ValueType  string `json:"valueType"`
 
-	DefaultValue string `json:"defaultValue"`
-	CurrentValue string `json:"currentValue"`
+	DefaultValue interface{} `json:"defaultValue"`
+	CurrentValue interface{} `json:"currentValue"`
 
-	PossibleValues []string `json:"possibleValues"`
+	PossibleValues []interface{} `json:"possibleValues"`
+	Visibility     string        `json:"visibility"`
 }
 
 func (policy *Policy) GetValue() interface{} {
 	if policy.ValueType == "int" {
-		value, _ := strconv.Atoi(policy.CurrentValue)
+		value, _ := strconv.Atoi(policy.CurrentValue.(string))
 		return value
 	} else if policy.ValueType == "bool" {
-		value, _ := strconv.ParseBool(policy.CurrentValue)
+		value, _ := strconv.ParseBool(policy.CurrentValue.(string))
 		return value
+	} else if policy.ValueType == "json" {
+		return policy.CurrentValue
 	}
 
 	return nil
