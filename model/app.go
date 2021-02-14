@@ -36,6 +36,8 @@ type ModuleRevision struct {
 	CreationTime time.Time `json:"creationTime"`
 	IsActive     bool      `json:"isActive"`
 	//Tags []string `json:"tags"`
+
+	Pipeline *StageDefinition `json:"pipeline"`
 }
 
 type ModuleBuild struct {

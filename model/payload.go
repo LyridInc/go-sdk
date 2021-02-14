@@ -1,5 +1,7 @@
 package model
 
+import "net/http"
+
 type Subdomain struct {
 	Name string `json:"name" binding:"required"`
 
@@ -15,7 +17,7 @@ type DeployedService struct {
 }
 
 type RequestPayload struct {
-	Headers               map[string]string `json:"headers"`
+	Headers               http.Header       `json:"headers"`
 	Path                  string            `json:"path"`
 	QueryStringParameters map[string]string `json:"queryStringParameters"`
 
@@ -44,7 +46,7 @@ func (request *RequestPayload) ToQuery() string {
 }
 
 type ResponsePayload struct {
-	Headers             map[string]string   `json:"headers"`
+	Headers             http.Header         `json:"headers"`
 	MultiValueHeaders   map[string][]string `json:"multiValueHeaders"`
 	StatusCode          int                 `json:"statusCode"`
 	Body                string              `json:"body"`
