@@ -46,11 +46,10 @@ func (request *RequestPayload) ToQuery() string {
 }
 
 type ResponsePayload struct {
-	Headers             http.Header         `json:"headers"`
-	MultiValueHeaders   map[string][]string `json:"multiValueHeaders"`
-	StatusCode          int                 `json:"statusCode"`
-	Body                string              `json:"body"`
-	ExecutionDurationMs int64               `json:"executionDurationMs"`
+	Headers             http.Header `json:"headers"`
+	StatusCode          int         `json:"statusCode"`
+	Body                string      `json:"body"`
+	ExecutionDurationMs int64       `json:"executionDurationMs"`
 
 	IsBase64Encoded bool `json:"isBase64Encoded"`
 }
