@@ -17,7 +17,7 @@ type DeployedService struct {
 }
 
 type RequestPayload struct {
-	Headers               http.Header       `json:"headers"`
+	Headers               http.Header       `json:"multiValueHeaders"`
 	Path                  string            `json:"path"`
 	QueryStringParameters map[string]string `json:"queryStringParameters"`
 
