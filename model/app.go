@@ -83,6 +83,7 @@ type ModuleDefinition struct {
 	Description   string               `yaml:"description"`
 	Web           string               `yaml:"web"`
 	ProjectFolder string               `yaml:"projectFolder"` // currently only used inside dotnet core project only, but technically this works on other languages
+	PrebuildScript string              `yaml:"prebuildScript"`
 	Functions     []FunctionDefinition `yaml:"functions"`
 }
 
