@@ -265,7 +265,7 @@ func (lc *LyridClient) ExecuteFunctionByName(AppName string, ModuleName string, 
 	}
 
 	if lc.checktoken() {
-		response, err := cli.PostBasicAuth(lc.geturl("/x/"+AppName+"/"+ModuleName+"/"+Tag+"/"+FunctionName), Body)
+		response, err := cli.PostBasicAuth(lc.geturl("/x/"+AppName+"/"+ModuleName+"/"+Tag+"/"+FunctionName+"/"), Body)
 		if err == nil {
 			if response.StatusCode == 200 {
 				defer response.Body.Close()
