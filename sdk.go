@@ -15,7 +15,7 @@ import (
 
 	"github.com/LyridInc/go-sdk/client"
 	"github.com/LyridInc/go-sdk/model"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"github.com/tatsushid/go-fastping"
 )
 
@@ -156,7 +156,7 @@ func (lc *LyridClient) GetAccountProfile() []*model.Account {
 func (lc *LyridClient) GetApps() []*model.App {
 	// tbd
 	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token}
-	fmt.Println("Token: ",lc.token)
+	fmt.Println("Token: ", lc.token)
 	if lc.checktoken() {
 		response, err := cli.Get("/api/serverless/app/get")
 		if err == nil {
@@ -256,6 +256,7 @@ func (lc *LyridClient) ExecuteFunction(FunctionId string, Framework string, Body
 	}
 	return nil, errors.New("Unable to execute function.")
 }
+
 // POST /execute/:appname/:modulename/:tag/:functionname
 func (lc *LyridClient) ExecuteFunctionByName(AppName string, ModuleName string, Tag string, FunctionName string, Body string) ([]byte, error) {
 	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token, Access: model.UserAccessToken{Key: lc.lyridaccess, Secret: lc.lyridsecret}}
@@ -273,6 +274,51 @@ func (lc *LyridClient) ExecuteFunctionByName(AppName string, ModuleName string, 
 			}
 		} else {
 			return nil, err
+		}
+	}
+	return nil, errors.New("Unable to execute function.")
+}
+
+func (lc *LyridClient) ExecuteApp(AppName string, ModuleName string, Tag string, FunctionName string, Uri string, Method string, Body string) ([]byte, error) {
+	cli := client.HTTPClient{LyraUrl: lc.GetLyridURL(), Token: lc.token, Access: model.UserAccessToken{Key: lc.lyridaccess, Secret: lc.lyridsecret}}
+
+	if lc.simulateserverless {
+		cli.LyraUrl = lc.simulatedexecuteurl
+	}
+
+	if lc.checktoken() {
+		path := lc.geturl("/x/"+AppName+"/"+ModuleName+"/"+Tag+"/"+FunctionName) + Uri
+
+		if Method == "GET" {
+			response, err := cli.Get(path)
+			if err == nil {
+				if response.StatusCode == 200 {
+					defer response.Body.Close()
+					return ioutil.ReadAll(response.Body)
+				}
+			} else {
+				return nil, err
+			}
+		} else if Method == "POST" {
+			response, err := cli.Post(path, Body)
+			if err == nil {
+				if response.StatusCode == 200 {
+					defer response.Body.Close()
+					return ioutil.ReadAll(response.Body)
+				}
+			} else {
+				return nil, err
+			}
+		} else if Method == "DELETE" {
+			response, err := cli.Delete(path)
+			if err == nil {
+				if response.StatusCode == 200 {
+					defer response.Body.Close()
+					return ioutil.ReadAll(response.Body)
+				}
+			} else {
+				return nil, err
+			}
 		}
 	}
 	return nil, errors.New("Unable to execute function.")
