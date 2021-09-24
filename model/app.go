@@ -112,11 +112,11 @@ type PublishedApp struct {
 func (definition *ModuleDefinition) GetFileExtension() string {
 	if definition.Language == "go1.x" {
 		return "go"
-	} else if definition.Language == "python3.7" || definition.Language == "python3.8" {
+	} else if definition.Language == "python3.7" || definition.Language == "python3.8" || definition.Language == "python3.9" {
 		return "py"
-	} else if definition.Language == "nodejs12.x" {
+	} else if definition.Language == "nodejs12.x" || definition.Language == "nodejs14.x" {
 		return "js"
-	} else if definition.Language == "dotnetcore3.1" {
+	} else if definition.Language == "dotnetcore3.1" || definition.Language == "dotnetcore5.0" {
 		return "cs"
 	}
 
