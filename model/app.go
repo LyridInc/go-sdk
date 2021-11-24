@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 type App struct {
 	ID        string `json:"id" binding:"required"`
@@ -23,8 +26,8 @@ type Module struct {
 	Tags        []string `json:"tags"`
 
 	CreatedBy    string    `json:"createdBy" binding:"required"`
-	LastActivity time.Time `json:"lastActivity""`
-	LastUpdate   time.Time `json:"lastUpdate""`
+	LastActivity time.Time `json:"lastActivity"`
+	LastUpdate   time.Time `json:"lastUpdate"`
 }
 
 type ModuleRevision struct {
@@ -54,8 +57,8 @@ type Function struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 
-	LastActivity time.Time `json:"lastActivity""`
-	LastUpdate   time.Time `json:"lastUpdate""`
+	LastActivity time.Time `json:"lastActivity"`
+	LastUpdate   time.Time `json:"lastUpdate"`
 }
 
 type FunctionCode struct {
@@ -78,13 +81,13 @@ type AppDefinition struct {
 }
 
 type ModuleDefinition struct {
-	Name          string               `yaml:"name"`
-	Language      string               `yaml:"language"`
-	Description   string               `yaml:"description"`
-	Web           string               `yaml:"web"`
-	ProjectFolder string               `yaml:"projectFolder"` // currently only used inside dotnet core project only, but technically this works on other languages
-	PrebuildScript string              `yaml:"prebuildScript"`
-	Functions     []FunctionDefinition `yaml:"functions"`
+	Name           string               `yaml:"name"`
+	Language       string               `yaml:"language"`
+	Description    string               `yaml:"description"`
+	Web            string               `yaml:"web"`
+	ProjectFolder  string               `yaml:"projectFolder"` // currently only used inside dotnet core project only, but technically this works on other languages
+	PrebuildScript string               `yaml:"prebuildScript"`
+	Functions      []FunctionDefinition `yaml:"functions"`
 }
 
 type FunctionDefinition struct {
@@ -115,6 +118,9 @@ func (definition *ModuleDefinition) GetFileExtension() string {
 	} else if definition.Language == "python3.7" || definition.Language == "python3.8" || definition.Language == "python3.9" {
 		return "py"
 	} else if definition.Language == "nodejs12.x" || definition.Language == "nodejs14.x" {
+		if strings.Contains(definition.Web, "typescript") {
+			return "ts"
+		}
 		return "js"
 	} else if definition.Language == "dotnetcore3.1" || definition.Language == "dotnetcore5.0" {
 		return "cs"
