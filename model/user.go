@@ -7,6 +7,14 @@ import (
 
 type AccountTierEnum uint
 
+const (
+	Basic AccountTierEnum = iota
+	Free
+	ProTrial
+	Pro
+	Enterprise
+)
+
 type LyridUser struct {
 	Id              string    `json:"id" binding:"required"`
 	Name            string    `json:"name"`
