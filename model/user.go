@@ -5,6 +5,16 @@ import (
 	"time"
 )
 
+type AccountTierEnum uint
+
+const (
+	Basic AccountTierEnum = iota
+	Free
+	ProTrial
+	Pro
+	Enterprise
+)
+
 type LyridUser struct {
 	Id              string    `json:"id" binding:"required"`
 	Name            string    `json:"name"`
@@ -20,11 +30,12 @@ type LyridUser struct {
 }
 
 type Account struct {
-	Id        string    `json:"id"`
-	Name      string    `json:"name" binding:"required"`
-	Tier      int       `json:"tier" binding:"required"`
-	CreatedOn time.Time `json:"createdOn"`
-	CreatedBy string    `json:"createdBy"`
+	Id        string    			`json:"id"`
+	Name      string    			`json:"name" binding:"required"`
+	Tier      AccountTierEnum       `json:"tier"`
+	TrialUsed bool            		`json:"trialUsed"`
+	CreatedOn time.Time 			`json:"createdOn"`
+	CreatedBy string    			`json:"createdBy"`
 }
 
 func (account *Account) GetBucketName() string {
