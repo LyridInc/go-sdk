@@ -1,6 +1,10 @@
 package model
 
-import "time"
+import (
+	"github.com/alecthomas/units"
+	"time"
+)
+
 
 type CloudVendor int
 
@@ -108,4 +112,9 @@ type LocationDescription struct {
 type AddressName struct {
 	LongName  string `json:"longName"`
 	ShortName string `json:"shortName"`
+}
+
+func (deployment *DeploymentEndpoint) GetInitialConsumptionUnit() int64 {
+	b, _ := units.ParseBase2Bytes(deployment.Memory + "B")
+	return int64(b) / int64(128*units.MiB)
 }
