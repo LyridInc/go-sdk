@@ -35,10 +35,14 @@ type ModuleRevision struct {
 	ModuleID string `json:"moduleId"`
 	CodeUri  string `json:"codeUri"`
 
-	CreatedBy    string    `json:"createdBy"`
-	CreationTime time.Time `json:"creationTime"`
-	IsActive     bool      `json:"isActive"`
+	Title		string	   `json:"title"`
+	CreatedBy    	string    `json:"createdBy"`
+	CreationTime 	time.Time `json:"creationTime"`
+	IsActive     	bool      `json:"isActive"`
+	IsLastKnown	bool	   `json:"isLastKnown"`
+
 	//Tags []string `json:"tags"`
+	SubmitSizeByte int64 `json:"submitSizeByte"`
 
 	Pipeline *StageDefinition `json:"pipeline"`
 }
