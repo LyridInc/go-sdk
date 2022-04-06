@@ -82,6 +82,7 @@ type AppDefinition struct {
 	Name        string             `yaml:"name"`
 	Description string             `yaml:"description"`
 	Modules     []ModuleDefinition `yaml:"modules"`
+	Volume 		VolumeDefinition 	`yaml:"volume"`
 }
 
 type ModuleDefinition struct {
@@ -92,6 +93,11 @@ type ModuleDefinition struct {
 	ProjectFolder  string               `yaml:"projectFolder"` // currently only used inside dotnet core project only, but technically this works on other languages
 	PrebuildScript string               `yaml:"prebuildScript"`
 	Functions      []FunctionDefinition `yaml:"functions"`
+}
+
+type VolumeDefinition struct {
+	Alias 			string				`yaml:"alias"`
+	MountPath 		string				`yaml:"mountPath"`
 }
 
 type FunctionDefinition struct {
