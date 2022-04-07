@@ -35,11 +35,11 @@ type ModuleRevision struct {
 	ModuleID string `json:"moduleId"`
 	CodeUri  string `json:"codeUri"`
 
-	Title		string	   `json:"title"`
-	CreatedBy    	string    `json:"createdBy"`
-	CreationTime 	time.Time `json:"creationTime"`
-	IsActive     	bool      `json:"isActive"`
-	IsLastKnown	bool	   `json:"isLastKnown"`
+	Title        string    `json:"title"`
+	CreatedBy    string    `json:"createdBy"`
+	CreationTime time.Time `json:"creationTime"`
+	IsActive     bool      `json:"isActive"`
+	IsLastKnown  bool      `json:"isLastKnown"`
 
 	//Tags []string `json:"tags"`
 	SubmitSizeByte int64 `json:"submitSizeByte"`
@@ -82,7 +82,6 @@ type AppDefinition struct {
 	Name        string             `yaml:"name"`
 	Description string             `yaml:"description"`
 	Modules     []ModuleDefinition `yaml:"modules"`
-	Volume 		VolumeDefinition 	`yaml:"volume"`
 }
 
 type ModuleDefinition struct {
@@ -93,11 +92,13 @@ type ModuleDefinition struct {
 	ProjectFolder  string               `yaml:"projectFolder"` // currently only used inside dotnet core project only, but technically this works on other languages
 	PrebuildScript string               `yaml:"prebuildScript"`
 	Functions      []FunctionDefinition `yaml:"functions"`
+
+	Volumes []VolumeDefinition `yaml:"volumes"`
 }
 
 type VolumeDefinition struct {
-	Alias 			string				`yaml:"alias"`
-	MountPath 		string				`yaml:"mountPath"`
+	Alias     string `yaml:"alias"`
+	MountPath string `yaml:"mountPath"`
 }
 
 type FunctionDefinition struct {
