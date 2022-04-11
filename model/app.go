@@ -93,12 +93,18 @@ type ModuleDefinition struct {
 	PrebuildScript string               `yaml:"prebuildScript"`
 	Functions      []FunctionDefinition `yaml:"functions"`
 
-	Volumes []VolumeDefinition `yaml:"volumes"`
+	Volumes 		[]VolumeDefinition `yaml:"volumes"`
+	Ports 			[]PortDefinition 	`yaml:"ports"`
 }
 
 type VolumeDefinition struct {
 	Alias     string `yaml:"alias"`
 	MountPath string `yaml:"mountPath"`
+}
+
+type PortDefinition struct {
+	Alias 		string		`yaml:"alias"`
+	PortNumber 	int64		`yaml:"portNumber"`
 }
 
 type FunctionDefinition struct {
