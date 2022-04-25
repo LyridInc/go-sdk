@@ -82,6 +82,9 @@ type AppDefinition struct {
 	Name        string             `yaml:"name"`
 	Description string             `yaml:"description"`
 	Modules     []ModuleDefinition `yaml:"modules"`
+
+	Database			DatabaseDefinition			`yaml:"database"`
+	ObjectStorage 		ObjectStorageDefinition		`yaml:"objectStorage"`
 }
 
 type ModuleDefinition struct {
@@ -111,6 +114,15 @@ type FunctionDefinition struct {
 	Name        string `yaml:"name"`
 	Entry       string `yaml:"entry"`
 	Description string `yaml:"description"`
+}
+
+type DatabaseDefinition struct {
+	Alias 		string			`yaml:"alias"`
+	Type 		string			`yaml:"type"`
+}
+
+type ObjectStorageDefinition struct {
+	Alias 		string			`yaml:"alias"`
 }
 
 type PublishedApp struct {
