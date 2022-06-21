@@ -9,6 +9,7 @@ type App struct {
 	ID        string `json:"id" binding:"required"`
 	AccountId string `json:"accountId" binding:"required"`
 	Name      string `json:"name" binding:"required"`
+	RelatedVega			string			`json:"relatedVega"`
 	CreatedBy string `json:"createdBy" binding:"required"`
 
 	Description  string    `json:"description"`
