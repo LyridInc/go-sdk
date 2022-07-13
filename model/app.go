@@ -6,11 +6,11 @@ import (
 )
 
 type App struct {
-	ID        string `json:"id" binding:"required"`
-	AccountId string `json:"accountId" binding:"required"`
-	Name      string `json:"name" binding:"required"`
-	RelatedVega			string			`json:"relatedVega"`
-	CreatedBy string `json:"createdBy" binding:"required"`
+	ID          string `json:"id" binding:"required"`
+	AccountId   string `json:"accountId" binding:"required"`
+	Name        string `json:"name" binding:"required"`
+	RelatedVega string `json:"relatedVega"`
+	CreatedBy   string `json:"createdBy" binding:"required"`
 
 	Description  string    `json:"description"`
 	LastActivity time.Time `json:"lastActivity"`
@@ -84,8 +84,8 @@ type AppDefinition struct {
 	Description string             `yaml:"description"`
 	Modules     []ModuleDefinition `yaml:"modules"`
 
-	Database			DatabaseDefinition			`yaml:"database"`
-	ObjectStorage 		ObjectStorageDefinition		`yaml:"objectStorage"`
+	Database      DatabaseDefinition      `yaml:"database"`
+	ObjectStorage ObjectStorageDefinition `yaml:"objectStorage"`
 }
 
 type ModuleDefinition struct {
@@ -97,8 +97,8 @@ type ModuleDefinition struct {
 	PrebuildScript string               `yaml:"prebuildScript"`
 	Functions      []FunctionDefinition `yaml:"functions"`
 
-	Volumes 		[]VolumeDefinition `yaml:"volumes"`
-	Ports 			[]PortDefinition 	`yaml:"ports"`
+	Volumes []VolumeDefinition `yaml:"volumes"`
+	Ports   []PortDefinition   `yaml:"ports"`
 }
 
 type VolumeDefinition struct {
@@ -107,8 +107,8 @@ type VolumeDefinition struct {
 }
 
 type PortDefinition struct {
-	Alias 		string		`yaml:"alias"`
-	PortNumber 	int64		`yaml:"portNumber"`
+	Alias      string `yaml:"alias"`
+	PortNumber int64  `yaml:"portNumber"`
 }
 
 type FunctionDefinition struct {
@@ -118,12 +118,12 @@ type FunctionDefinition struct {
 }
 
 type DatabaseDefinition struct {
-	Alias 		string			`yaml:"alias"`
-	Type 		string			`yaml:"type"`
+	Alias string `yaml:"alias"`
+	Type  string `yaml:"type"`
 }
 
 type ObjectStorageDefinition struct {
-	Alias 		string			`yaml:"alias"`
+	Alias string `yaml:"alias"`
 }
 
 type PublishedApp struct {
@@ -147,7 +147,7 @@ func (definition *ModuleDefinition) GetFileExtension() string {
 		return "go"
 	} else if definition.Language == "python3.7" || definition.Language == "python3.8" || definition.Language == "python3.9" {
 		return "py"
-	} else if definition.Language == "nodejs12.x" || definition.Language == "nodejs14.x" {
+	} else if definition.Language == "nodejs12.x" || definition.Language == "nodejs14.x" || definition.Language == "nodejs16.x" {
 		if strings.Contains(definition.Web, "typescript") {
 			return "ts"
 		}
