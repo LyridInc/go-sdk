@@ -15,7 +15,7 @@ import (
 
 	"github.com/LyridInc/go-sdk/client"
 	"github.com/LyridInc/go-sdk/model"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/tatsushid/go-fastping"
 )
 
