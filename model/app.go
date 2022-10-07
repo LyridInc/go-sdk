@@ -108,7 +108,7 @@ type VolumeDefinition struct {
 
 type PortDefinition struct {
 	Alias      string `yaml:"alias"`
-	PortNumber int64  `yaml:"portNumber"`
+	Port       int64  `yaml:"port"`
 }
 
 type FunctionDefinition struct {
