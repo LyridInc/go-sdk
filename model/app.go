@@ -145,7 +145,7 @@ type PublishedApp struct {
 func (definition *ModuleDefinition) GetFileExtension() string {
 	if definition.Language == "go1.x" {
 		return "go"
-	} else if definition.Language == "python3.7" || definition.Language == "python3.8" || definition.Language == "python3.9" {
+	} else if definition.Language == "python3.7" || definition.Language == "python3.8" || definition.Language == "python3.9" || definition.Language == "python3.10" {
 		return "py"
 	} else if definition.Language == "nodejs12.x" || definition.Language == "nodejs14.x" || definition.Language == "nodejs16.x" {
 		if strings.Contains(definition.Web, "typescript") {
