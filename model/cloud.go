@@ -57,6 +57,7 @@ type DeploymentEndpoint struct {
 
 	CodeID   string      `json:"codeId" binding:"required"`
 	Name     string      `json:"name" binding:"required"`
+	
 	Type     string      `json:"type" binding:"required"`
 	VendorID CloudVendor `json:"vendorId" binding:"required"`
 	RegionID string      `json:"regionId" binding:"required"`
@@ -65,7 +66,8 @@ type DeploymentEndpoint struct {
 	Memory   string        `json:"memory" binding:"required"`
 	Timeout  time.Duration `json:"duration" binding:"required"`
 
-	Metadata string `json:"metadata"`
+	Metadata  string      `json:"metadata"`
+	Namespace string      `json:"namespace"`
 }
 
 type FrameworkDefinition struct {
