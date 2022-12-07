@@ -99,6 +99,7 @@ type ModuleDefinition struct {
 
 	Volumes []VolumeDefinition `yaml:"volumes"`
 	Ports   []PortDefinition   `yaml:"ports"`
+	Config 	ConfigDefinition	`yaml:"config"`
 }
 
 type VolumeDefinition struct {
@@ -109,6 +110,12 @@ type VolumeDefinition struct {
 type PortDefinition struct {
 	Alias      string `yaml:"alias"`
 	Port       int64  `yaml:"port"`
+}
+
+type ConfigDefinition struct {
+	Instance	string	`yaml:"instance"`
+	RegionId 	string	`yaml:"regionId"`
+	Distributed	bool	`yaml:"distributed"`
 }
 
 type FunctionDefinition struct {
