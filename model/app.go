@@ -94,6 +94,7 @@ type ModuleDefinition struct {
 	Description    string               `yaml:"description"`
 	Web            string               `yaml:"web"`
 	ProjectFolder  string               `yaml:"projectFolder"` // currently only used inside dotnet core project only, but technically this works on other languages
+	BuildStep      string               `yaml:"buildStep"`     // currently only used inside generic nodejs18.x core project only, but technically this works on other languages, the flag executes the "yarn build" step
 	PrebuildScript string               `yaml:"prebuildScript"`
 	Functions      []FunctionDefinition `yaml:"functions"`
 
