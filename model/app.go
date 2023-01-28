@@ -99,7 +99,7 @@ type ModuleDefinition struct {
 
 	Volumes []VolumeDefinition `yaml:"volumes"`
 	Ports   []PortDefinition   `yaml:"ports"`
-	Config 	ConfigDefinition	`yaml:"config"`
+	Config  ConfigDefinition   `yaml:"config"`
 }
 
 type VolumeDefinition struct {
@@ -108,14 +108,20 @@ type VolumeDefinition struct {
 }
 
 type PortDefinition struct {
-	Alias      string `yaml:"alias"`
-	Port       int64  `yaml:"port"`
+	Alias string `yaml:"alias"`
+	Port  int64  `yaml:"port"`
 }
 
 type ConfigDefinition struct {
-	Instance	string	`yaml:"instance"`
-	RegionId 	string	`yaml:"regionId"`
-	Distributed	bool	`yaml:"distributed"`
+	Instance    string           `yaml:"instance"`
+	RegionId    string           `yaml:"regionId"`
+	Distributed bool             `yaml:"distributed"`
+	Scale       *AutoScaleConfig `yaml:"scale"`
+}
+
+type AutoScaleConfig struct {
+	Min int64 `yaml:"min"`
+	Max int64 `yaml:"max"`
 }
 
 type FunctionDefinition struct {
@@ -154,12 +160,12 @@ func (definition *ModuleDefinition) GetFileExtension() string {
 		return "go"
 	} else if definition.Language == "python3.7" || definition.Language == "python3.8" || definition.Language == "python3.9" || definition.Language == "python3.10" {
 		return "py"
-	} else if definition.Language == "nodejs12.x" || definition.Language == "nodejs14.x" || definition.Language == "nodejs16.x" {
+	} else if definition.Language == "nodejs12.x" || definition.Language == "nodejs14.x" || definition.Language == "nodejs16.x" || definition.Language == "nodejs18.x" {
 		if strings.Contains(definition.Web, "typescript") {
 			return "ts"
 		}
 		return "js"
-	} else if definition.Language == "dotnetcore3.1" || definition.Language == "dotnetcore5.0" {
+	} else if definition.Language == "dotnetcore3.1" || definition.Language == "dotnetcore5.0" || definition.Language == "dotnetcore7.0" {
 		return "cs"
 	}
 
