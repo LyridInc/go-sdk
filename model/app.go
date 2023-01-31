@@ -15,6 +15,11 @@ type App struct {
 	Description  string    `json:"description"`
 	LastActivity time.Time `json:"lastActivity"`
 	LastUpdate   time.Time `json:"lastUpdate"`
+
+	GitURL string `json:"gitUrl"`
+
+	DistributedRegion bool `json:"distributedRegion"`
+	IsDeleted         bool `json:"isDeleted"`
 }
 
 type Module struct {
