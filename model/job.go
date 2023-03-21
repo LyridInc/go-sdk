@@ -26,6 +26,7 @@ type Job struct {
 	CreationTime   time.Time     `json:"creationTime"`
 	LastUpdateTime time.Time     `json:"lastUpdateTime"`
 	Payload        string        `json:"payload"`
+	RetryJobType   string        `json:"retryJobType"`
 }
 
 type JobInfo struct {
