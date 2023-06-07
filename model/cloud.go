@@ -55,8 +55,9 @@ type CloudCredential struct {
 type DeploymentEndpoint struct {
 	ID string `json:"id" binding:"required"`
 
-	CodeID string `json:"codeId" binding:"required"`
-	Name   string `json:"name" binding:"required"`
+	CodeID  string   `json:"codeId" binding:"required"`
+	CodeIDs []string `json:"codeIDs"`
+	Name    string   `json:"name" binding:"required"`
 
 	Type     string      `json:"type" binding:"required"`
 	VendorID CloudVendor `json:"vendorId" binding:"required"`
