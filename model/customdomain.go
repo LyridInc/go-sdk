@@ -29,6 +29,8 @@ type CustomDomain struct {
 	Status CustomDomainStatusEnum `json:"status" binding:"required"`
 
 	Certificates []Certificate `json:"certificates" binding:"required"`
+	CreatedAt    time.Time     `json:"createdAt"`
+	UpdatedAt    time.Time     `json:"updatedAt"`
 }
 
 type Certificate struct {

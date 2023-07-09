@@ -21,8 +21,8 @@ type LyridUser struct {
 	Email           string    `json:"email"`
 	EmailVerified   bool      `json:"emailVerified"`
 	Roles           []string  `json:"roles"`
-	RelatedRoles    []string  `json:"relatedRoles`
-	RelatedAccounts []string  `json:"relatedAccounts`
+	RelatedRoles    []string  `json:"relatedRoles"`
+	RelatedAccounts []string  `json:"relatedAccounts"`
 	BetaAccess      bool      `json:"betaAccess"`
 	CurrentAccount  string    `json:"currentAccount"`
 	DefaultAccount  string    `json:"defaultAccount"`
@@ -30,12 +30,12 @@ type LyridUser struct {
 }
 
 type Account struct {
-	Id        string    			`json:"id"`
-	Name      string    			`json:"name" binding:"required"`
-	Tier      AccountTierEnum       `json:"tier"`
-	TrialUsed bool            		`json:"trialUsed"`
-	CreatedOn time.Time 			`json:"createdOn"`
-	CreatedBy string    			`json:"createdBy"`
+	Id        string          `json:"id"`
+	Name      string          `json:"name" binding:"required"`
+	Tier      AccountTierEnum `json:"tier"`
+	TrialUsed bool            `json:"trialUsed"`
+	CreatedOn time.Time       `json:"createdOn"`
+	CreatedBy string          `json:"createdBy"`
 }
 
 func (account *Account) GetBucketName() string {

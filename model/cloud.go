@@ -71,6 +71,9 @@ type DeploymentEndpoint struct {
 	Namespace string `json:"namespace"`
 
 	RelatedVega string `json:"relatedvega"`
+
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type FrameworkDefinition struct {
