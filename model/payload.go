@@ -9,7 +9,7 @@ type Subdomain struct {
 	ModuleId     string `json:"moduleId" binding:"required"`
 	FunctionName string `json:"functionName" binding:"required"`
 	Tag          string `json:"tag"`
-	Public       bool   `json:"public"`
+	Public       *bool  `json:"public"`
 }
 
 type DeployedService struct {
