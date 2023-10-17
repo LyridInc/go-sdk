@@ -91,6 +91,5 @@ func (c *HarborClient) GetRepositoryArtifacts(projectName, repositoryName, tag s
 		return nil, err
 	}
 
-	// https://harbor.uswest3.lyr.id/api/v2.0/projects/build/repositories/vega/artifacts?with_tag=false&with_scan_overview=true&with_label=true&with_accessory=false&q=tags%253D~bigbang&page_size=15&page=1
 	return c.doHttpRequest(request)
 }
