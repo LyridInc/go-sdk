@@ -136,10 +136,12 @@ func TestGetFunctionExecute(t *testing.T) {
 // 	harborUsername := os.Getenv("HARBOR_USERNAME")
 // 	harborPassword := os.Getenv("HARBOR_PASSWORD")
 // 	client := model.NewHarborClient(harborBaseURL, harborUsername, harborPassword)
-// 	b, err := client.GetRepositoryArtifacts("build", "vega", "develop")
+// 	artifacts, err := client.GetRepositoryArtifacts("build", "vega", "develop")
 // 	if err != nil {
 // 		t.Fatal(err)
 // 	}
+
+// 	b, _ := json.Marshal(artifacts)
 
 // 	t.Log(string(b))
 // }

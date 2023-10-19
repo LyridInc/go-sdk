@@ -2,17 +2,66 @@ package model
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
+
+type Artifact struct {
+	ID                int          `json:"id"`
+	Accessories       interface{}  `json:"accessories"`
+	AdditionLinks     AdditionLink `json:"addition_links"`
+	Digest            string       `json:"digest"`
+	ExtraAttrs        Attribute    `json:"extra_attrs"`
+	Icon              string       `json:"icon"`
+	Labels            interface{}  `json:"labels"`
+	ManifestMediaType string       `json:"manifest_media_type"`
+	MediaType         string       `json:"media_type"`
+	ProjectID         int          `json:"project_id"`
+	PullTime          *time.Time   `json:"pull_time"`
+	PushTime          *time.Time   `json:"push_time"`
+	RepositoryID      int          `json:"repository_id"`
+	Size              uint64       `json:"size"`
+	Tags              []BuildTag   `json:"tags"`
+	Type              string       `json:"type"`
+}
+
+type AdditionLink struct {
+	BuildHistory    Link `json:"build_history"`
+	Vulnerabilities Link `json:"vulnerabilities"`
+}
+
+type Link struct {
+	Absolute bool   `json:"absolute"`
+	Href     string `json:"href"`
+}
+
+type Attribute struct {
+	Architecture string      `json:"architecture"`
+	Author       string      `json:"author"`
+	Config       interface{} `json:"config"`
+	Created      *time.Time  `json:"created"`
+	OS           string      `json:"os"`
+}
+
+type BuildTag struct {
+	ArtifactID   int        `json:"artifact_id"`
+	ID           int        `json:"id"`
+	Immutable    bool       `json:"immutable"`
+	Name         string     `json:"name"`
+	PullTime     *time.Time `json:"pull_time"`
+	PushTime     *time.Time `json:"push_time"`
+	RepositoryID int        `json:"repository_id"`
+}
 
 type IHarborClient interface {
 	ListProjects() ([]byte, error)
 	GetProject(projectName string) ([]byte, error)
 	GetProjectRepositories(projectName string) ([]byte, error)
 	GetRepository(projectName, repositoryName string) ([]byte, error)
-	GetRepositoryArtifacts(projectName, repositoryName, tag string) ([]byte, error)
+	GetRepositoryArtifacts(projectName, repositoryName, tag string) (*[]Artifact, error)
 }
 
 type HarborClient struct {
@@ -81,7 +130,7 @@ func (c *HarborClient) GetRepository(projectName, repositoryName string) ([]byte
 	return c.doHttpRequest(request)
 }
 
-func (c *HarborClient) GetRepositoryArtifacts(projectName, repositoryName, tag string) ([]byte, error) {
+func (c *HarborClient) GetRepositoryArtifacts(projectName, repositoryName, tag string) (*[]Artifact, error) {
 	path := "/projects/" + projectName + "/repositories/" + repositoryName + "/artifacts?"
 	if tag != "" {
 		path = path + "q=tags%253D~" + tag
@@ -91,5 +140,13 @@ func (c *HarborClient) GetRepositoryArtifacts(projectName, repositoryName, tag s
 		return nil, err
 	}
 
-	return c.doHttpRequest(request)
+	b, err := c.doHttpRequest(request)
+	if err != nil {
+		return nil, err
+	}
+
+	artifacts := []Artifact{}
+	json.Unmarshal(b, &artifacts)
+
+	return &artifacts, nil
 }
