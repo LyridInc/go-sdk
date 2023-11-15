@@ -116,6 +116,7 @@ type VolumeDefinition struct {
 type PortDefinition struct {
 	Alias string `yaml:"alias"`
 	Port  int64  `yaml:"port"`
+	UseProbe bool `yaml:"useProbe"`
 }
 
 type ConfigDefinition struct {
