@@ -167,7 +167,7 @@ func (definition *ModuleDefinition) GetFileExtension() string {
 		return "go"
 	} else if definition.Language == "python3.7" || definition.Language == "python3.8" || definition.Language == "python3.9" || definition.Language == "python3.10" || definition.Language == "python3.11" {
 		return "py"
-	} else if definition.Language == "nodejs12.x" || definition.Language == "nodejs14.x" || definition.Language == "nodejs16.x" || definition.Language == "nodejs18.x" {
+	} else if definition.Language == "nodejs12.x" || definition.Language == "nodejs14.x" || definition.Language == "nodejs16.x" || definition.Language == "nodejs18.x" || definition.Language == "nodejs20.x" {
 		if strings.Contains(definition.Web, "typescript") {
 			return "ts"
 		}
