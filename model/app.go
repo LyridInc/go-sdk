@@ -103,9 +103,15 @@ type ModuleDefinition struct {
 	PrebuildScript string               `yaml:"prebuildScript"`
 	Functions      []FunctionDefinition `yaml:"functions"`
 
-	Volumes []VolumeDefinition `yaml:"volumes"`
-	Ports   []PortDefinition   `yaml:"ports"`
-	Config  ConfigDefinition   `yaml:"config"`
+	Volumes      []VolumeDefinition `yaml:"volumes"`
+	Ports        []PortDefinition   `yaml:"ports"`
+	Config       ConfigDefinition   `yaml:"config"`
+	CustomLabels []KVPairStandard   `yaml:"customLabels"`
+}
+
+type KVPairStandard struct {
+	Key   string `yaml:"key"`
+	Value string `yaml:"value"`
 }
 
 type VolumeDefinition struct {
@@ -114,9 +120,9 @@ type VolumeDefinition struct {
 }
 
 type PortDefinition struct {
-	Alias string `yaml:"alias"`
-	Port  int64  `yaml:"port"`
-	UseProbe bool `yaml:"useProbe"`
+	Alias    string `yaml:"alias"`
+	Port     int64  `yaml:"port"`
+	UseProbe bool   `yaml:"useProbe"`
 }
 
 type ConfigDefinition struct {
