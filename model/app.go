@@ -85,28 +85,51 @@ type FunctionCode struct {
 // Definitions (this is used for the user to configure the app/modules/function
 
 type AppDefinition struct {
-	Name        string             `yaml:"name"`
-	Description string             `yaml:"description"`
-	Modules     []ModuleDefinition `yaml:"modules"`
-
+	Name          string                  `yaml:"name"`
+	Description   string                  `yaml:"description"`
+	IgnoreFiles   string                  `yaml:"ignoreFiles"`
+	Modules       []ModuleDefinition      `yaml:"modules"`
 	Database      DatabaseDefinition      `yaml:"database"`
 	ObjectStorage ObjectStorageDefinition `yaml:"objectStorage"`
+	Resources     []ResourcesDefinition   `yaml:"resources"`
+	Spec          []SpecDefinition        `yaml:"spec"`
+}
+
+type ResourcesDefinition struct {
+	Cpu      string       `yaml:"cpu"`
+	Memory   string       `yaml:"memory"`
+	Requests ResourceList `yaml:"requests"`
+	Limits   ResourceList `yaml:"limits"`
+}
+
+type SpecDefinition struct {
+	Replica string `yaml:"replica"`
+}
+
+type ResourceList struct {
+	Cpu    string `yaml:"cpu"`
+	Memory string `yaml:"memory"`
 }
 
 type ModuleDefinition struct {
+	ID             string               `json:"id"`
 	Name           string               `yaml:"name"`
 	Language       string               `yaml:"language"`
 	Description    string               `yaml:"description"`
 	Web            string               `yaml:"web"`
-	ProjectFolder  string               `yaml:"projectFolder"` // currently only used inside dotnet core project only, but technically this works on other languages
-	BuildStep      string               `yaml:"buildStep"`     // currently only used inside generic nodejs18.x core project only, but technically this works on other languages, the flag executes the "yarn build" step
+	HidePublicURL  bool                 `yaml:"hidePublicURL"`
+	ProjectFolder  string               `yaml:"projectFolder"`
 	PrebuildScript string               `yaml:"prebuildScript"`
+	Config         ConfigDefinition     `yaml:"config"`
 	Functions      []FunctionDefinition `yaml:"functions"`
 
-	Volumes      []VolumeDefinition `yaml:"volumes"`
-	Ports        []PortDefinition   `yaml:"ports"`
-	Config       ConfigDefinition   `yaml:"config"`
-	CustomLabels []KVPairStandard   `yaml:"customLabels"`
+	Volumes      []VolumeDefinition  `yaml:"volumes"`
+	Ports        []PortDefinition    `yaml:"ports"`
+	Resources    ResourcesDefinition `json:"resources"`
+	CustomLabels []KVPairStandard    `yaml:"customLabels"`
+
+	LastActivity time.Time `json:"lastActivity"`
+	LastUpdate   time.Time `json:"lastUpdate"`
 }
 
 type KVPairStandard struct {
@@ -169,6 +192,12 @@ type PublishedApp struct {
 }
 
 func (definition *ModuleDefinition) GetFileExtension() string {
+	// languages := map[string][]string{
+	// 	"go": []string{"go1.x"},
+	// 	"py": []string{"python3.7", "python3.8", "python3.9", "python3.10", "python3.11"},
+	// 	"ts": [],
+	// }
+
 	if definition.Language == "go1.x" {
 		return "go"
 	} else if definition.Language == "python3.7" || definition.Language == "python3.8" || definition.Language == "python3.9" || definition.Language == "python3.10" || definition.Language == "python3.11" {
