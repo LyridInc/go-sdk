@@ -7,7 +7,7 @@ import (
 type AppDeploymentSpec struct {
 	Image        string                      `json:"image"`
 	Replicas     int32                       `json:"replicas"`
-	BearerToken  string                      `json:"bearerToken"`
+	BearerToken  string                      `json:"bearerToken,omitempty"`
 	RevisionId   string                      `json:"revisionId,omitempty"`
 	Ports        []corev1.ContainerPort      `json:"ports,omitempty"`
 	Resources    corev1.ResourceRequirements `json:"resources,omitempty"`
