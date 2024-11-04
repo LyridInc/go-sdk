@@ -17,10 +17,10 @@ type SyncAppRequest struct {
 	AppName      string `json:"app_name"`
 	AppNamespace string `json:"app_namespace"`
 
-	Replicas     int32             `json:"replicas"`
-	Ports        []interface{}     `json:"ports"`
-	Resources    SyncAppResources  `json:"resources"`
-	VolumeMounts map[string]string `json:"volume_mounts"`
+	Replicas     int32            `json:"replicas"`
+	Ports        []ContainerPort  `json:"ports"`
+	Resources    SyncAppResources `json:"resources"`
+	VolumeMounts VolumeMount      `json:"volume_mounts"`
 }
 
 type SyncAppResources struct {
