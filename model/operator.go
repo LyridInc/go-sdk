@@ -17,10 +17,10 @@ type SyncAppRequest struct {
 	AppName      string `json:"app_name"`
 	AppNamespace string `json:"app_namespace"`
 
-	Replicas     int32                  `json:"replicas"`
-	Ports        []interface{}          `json:"ports"`
-	Resources    map[string]interface{} `json:"resources"`
-	VolumeMounts map[string]string      `json:"volume_mounts"`
+	Replicas     int32                        `json:"replicas"`
+	Ports        []interface{}                `json:"ports"`
+	Resources    map[string]map[string]string `json:"resources"`
+	VolumeMounts map[string]string            `json:"volume_mounts"`
 }
 
 type AppDeploymentSpec struct {
@@ -29,6 +29,19 @@ type AppDeploymentSpec struct {
 	Ports        []ContainerPort      `json:"ports,omitempty"`
 	Resources    ResourceRequirements `json:"resources,omitempty"`
 	VolumeMounts []VolumeMount        `json:"volumeMounts,omitempty"`
+}
+
+func GetResourcesFromResourceRequirements(rr ResourceRequirements) map[string]interface{} {
+	return map[string]interface{}{
+		"requests": map[string]string{
+			"cpu":    rr.Requests.Cpu().String(),
+			"memory": rr.Requests.Memory().String(),
+		},
+		"limits": map[string]string{
+			"cpu":    rr.Limits.Cpu().String(),
+			"memory": rr.Limits.Memory().String(),
+		},
+	}
 }
 
 func ConvertCrdToLyridDefinition(appName string, crd AppDeploymentSpec) AppDefinition {
@@ -117,9 +130,21 @@ func ConvertLyridDefinitionToCrd(dockerImage string, d AppDefinition) (*AppDeplo
 	}
 
 	cpuLimit, err := resource.ParseQuantity(module.Resources.Limits.Cpu)
+	if err != nil {
+		return nil, fmt.Errorf("error parse cpu limit")
+	}
 	memoryLimit, err := resource.ParseQuantity(module.Resources.Limits.Memory)
+	if err != nil {
+		return nil, fmt.Errorf("error parse memory limit")
+	}
 	cpuRequest, err := resource.ParseQuantity(module.Resources.Requests.Cpu)
+	if err != nil {
+		return nil, fmt.Errorf("error parse cpu requests")
+	}
 	memoryRequest, err := resource.ParseQuantity(module.Resources.Requests.Memory)
+	if err != nil {
+		return nil, fmt.Errorf("error parse memory request")
+	}
 
 	resources := ResourceRequirements{
 		Limits: corev1.ResourceList{
