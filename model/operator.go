@@ -14,13 +14,14 @@ type ResourceRequirements corev1.ResourceRequirements
 type VolumeMount corev1.VolumeMount
 
 type SyncAppRequest struct {
-	AppName      string `json:"app_name"`
-	AppNamespace string `json:"app_namespace"`
+	AppName      string `json:"appName"`
+	AppNamespace string `json:"appNamespace"`
 
 	Replicas     int32            `json:"replicas"`
 	Ports        []ContainerPort  `json:"ports"`
 	Resources    SyncAppResources `json:"resources"`
-	VolumeMounts VolumeMount      `json:"volume_mounts"`
+	VolumeMounts VolumeMount      `json:"volumeMounts"`
+	VegaID       string           `json:"vegaId"`
 }
 
 type SyncAppResponse struct {
