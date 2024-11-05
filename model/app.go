@@ -156,6 +156,7 @@ type ConfigDefinition struct {
 	RegionId    string           `yaml:"regionId"`
 	Distributed bool             `yaml:"distributed"`
 	Scale       *AutoScaleConfig `yaml:"scale"`
+	PublicURL   *bool            `yaml:"publicURL"`
 }
 
 type AutoScaleConfig struct {
