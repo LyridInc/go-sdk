@@ -23,6 +23,14 @@ type SyncAppRequest struct {
 	VolumeMounts VolumeMount      `json:"volume_mounts"`
 }
 
+type SyncAppResponse struct {
+	App              App              `json:"app"`
+	AppDefinition    AppDefinition    `json:"appDefinition"`
+	Module           Module           `json:"module"`
+	ModuleDefinition ModuleDefinition `json:"moduleDefinition"`
+	Subdomain        Subdomain        `json:"subdomain"`
+}
+
 type SyncAppResources struct {
 	Limits   SyncAppResource `json:"limits"`
 	Requests SyncAppResource `json:"requests"`
