@@ -21,7 +21,7 @@ type SyncAppRequest struct {
 	Ports        []ContainerPort  `json:"ports"`
 	Resources    SyncAppResources `json:"resources"`
 	VolumeMounts VolumeMount      `json:"volumeMounts"`
-	VegaID       string           `json:"vegaId"`
+	InstanceID   string           `json:"instanceId"`
 }
 
 type SyncAppResponse struct {
