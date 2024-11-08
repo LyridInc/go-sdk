@@ -26,13 +26,16 @@ type SyncAppRequest struct {
 }
 
 type SyncAppResponse struct {
-	App               App               `json:"app,omitempty"`
-	AppDefinition     AppDefinition     `json:"appDefinition,omitempty"`
-	AppDeploymentSpec AppDeploymentSpec `json:"appDeploymentSpec,omitempty"`
-	Module            Module            `json:"module,omitempty"`
-	ModuleDefinition  ModuleDefinition  `json:"moduleDefinition,omitempty"`
-	ModuleRevision    ModuleRevision    `json:"moduleRevision,omitempty"`
-	Subdomain         Subdomain         `json:"subdomain,omitempty"`
+	App                App                `json:"app,omitempty"`
+	AppDefinition      AppDefinition      `json:"appDefinition,omitempty"`
+	AppDeploymentSpec  AppDeploymentSpec  `json:"appDeploymentSpec,omitempty"`
+	Module             Module             `json:"module,omitempty"`
+	ModuleDefinition   ModuleDefinition   `json:"moduleDefinition,omitempty"`
+	ModuleRevision     ModuleRevision     `json:"moduleRevision,omitempty"`
+	Subdomain          Subdomain          `json:"subdomain,omitempty"`
+	Function           Function           `json:"function,omitempty"`
+	FunctionCode       FunctionCode       `json:"functionCode,omitempty"`
+	DeploymentEndpoint DeploymentEndpoint `json:"deploymentEndpoint,omitempty"`
 }
 
 type SyncAppResources struct {
