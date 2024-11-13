@@ -17,12 +17,13 @@ type SyncAppRequest struct {
 	AppName      string `json:"appName"`
 	AppNamespace string `json:"appNamespace"`
 
-	Replicas         int32            `json:"replicas"`
-	Ports            []ContainerPort  `json:"ports"`
-	Resources        SyncAppResources `json:"resources"`
-	VolumeMounts     VolumeMount      `json:"volumeMounts"`
-	InstanceID       string           `json:"instanceId"`
-	ActiveRevisionId string           `json:"activeRevisionId"`
+	Replicas                 int32            `json:"replicas"`
+	Ports                    []ContainerPort  `json:"ports"`
+	Resources                SyncAppResources `json:"resources"`
+	VolumeMounts             VolumeMount      `json:"volumeMounts"`
+	InstanceID               string           `json:"instanceId"`
+	ActiveRevisionId         string           `json:"activeRevisionId"`
+	DeploymentEndpointDomain string           `json:"deploymentEndpointDomain"`
 }
 
 type SyncAppResponse struct {
