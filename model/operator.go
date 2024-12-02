@@ -13,6 +13,8 @@ type ContainerPort corev1.ContainerPort
 type ResourceRequirements corev1.ResourceRequirements
 type VolumeMount corev1.VolumeMount
 
+// START REQUEST
+
 type SyncAppRequest struct {
 	AppName      string `json:"appName"`
 	AppNamespace string `json:"appNamespace"`
@@ -26,6 +28,17 @@ type SyncAppRequest struct {
 	DeploymentEndpointDomain string           `json:"deploymentEndpointDomain"`
 }
 
+type SyncModuleRequest struct {
+	AppName      string `json:"appName"`
+	AppNamespace string `json:"appNamespace"`
+
+	ModuleId string `json:"moduleId"`
+}
+
+// END REQUEST
+
+// START RESPONSE
+
 type SyncAppResponse struct {
 	App                App                `json:"app,omitempty"`
 	AppDefinition      AppDefinition      `json:"appDefinition,omitempty"`
@@ -38,6 +51,18 @@ type SyncAppResponse struct {
 	FunctionCode       FunctionCode       `json:"functionCode,omitempty"`
 	DeploymentEndpoint DeploymentEndpoint `json:"deploymentEndpoint,omitempty"`
 }
+
+type SyncModuleResponse struct {
+	Module             Module             `json:"module,omitempty"`
+	ModuleDefinition   ModuleDefinition   `json:"moduleDefinition,omitempty"`
+	ModuleRevision     ModuleRevision     `json:"moduleRevision,omitempty"`
+	Subdomain          Subdomain          `json:"subdomain,omitempty"`
+	Function           Function           `json:"function,omitempty"`
+	FunctionCode       FunctionCode       `json:"functionCode,omitempty"`
+	DeploymentEndpoint DeploymentEndpoint `json:"deploymentEndpoint,omitempty"`
+}
+
+// END RESPONSE
 
 type SyncAppResources struct {
 	Limits   SyncAppResource `json:"limits"`
