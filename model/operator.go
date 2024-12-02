@@ -29,10 +29,14 @@ type SyncAppRequest struct {
 }
 
 type SyncModuleRequest struct {
-	AppName          string `json:"appName"`
-	AppNamespace     string `json:"appNamespace"`
-	InstanceID       string `json:"instanceId"`
-	ActiveRevisionId string `json:"activeRevisionId"`
+	AppName          string           `json:"appName"`
+	AppNamespace     string           `json:"appNamespace"`
+	Replicas         int32            `json:"replicas"`
+	Ports            []ContainerPort  `json:"ports"`
+	Resources        SyncAppResources `json:"resources"`
+	VolumeMounts     VolumeMount      `json:"volumeMounts"`
+	InstanceID       string           `json:"instanceId"`
+	ActiveRevisionId string           `json:"activeRevisionId"`
 
 	ModuleId string `json:"moduleId"`
 }
@@ -55,6 +59,8 @@ type SyncAppResponse struct {
 }
 
 type SyncModuleResponse struct {
+	AppDefinition      AppDefinition      `json:"appDefinition,omitempty"`
+	AppDeploymentSpec  AppDeploymentSpec  `json:"appDeploymentSpec,omitempty"`
 	Module             Module             `json:"module,omitempty"`
 	ModuleDefinition   ModuleDefinition   `json:"moduleDefinition,omitempty"`
 	ModuleRevision     ModuleRevision     `json:"moduleRevision,omitempty"`
