@@ -38,7 +38,11 @@ type SyncModuleRequest struct {
 	InstanceID       string           `json:"instanceId"`
 	ActiveRevisionId string           `json:"activeRevisionId"`
 
-	ModuleId string `json:"moduleId"`
+	ModuleId          string `json:"moduleId"`
+	ModuleDescription string `json:"moduleDescription"`
+	ModuleLanguage    string `json:"moduleLanguage"`
+	ModuleName        string `json:"moduleName"`
+	ModuleWeb         string `json:"moduleWeb"`
 }
 
 // END REQUEST
