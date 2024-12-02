@@ -29,8 +29,10 @@ type SyncAppRequest struct {
 }
 
 type SyncModuleRequest struct {
-	AppName      string `json:"appName"`
-	AppNamespace string `json:"appNamespace"`
+	AppName          string `json:"appName"`
+	AppNamespace     string `json:"appNamespace"`
+	InstanceID       string `json:"instanceId"`
+	ActiveRevisionId string `json:"activeRevisionId"`
 
 	ModuleId string `json:"moduleId"`
 }
