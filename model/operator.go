@@ -45,6 +45,10 @@ type SyncModuleRequest struct {
 	ModuleWeb         string `json:"moduleWeb"`
 }
 
+type SyncRevisionRequest struct {
+	ActiveRevisionId string `json:"activeRevisionId"`
+}
+
 // END REQUEST
 
 // START RESPONSE
