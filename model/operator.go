@@ -47,6 +47,7 @@ type SyncModuleRequest struct {
 
 type SyncRevisionRequest struct {
 	ActiveRevisionId string `json:"activeRevisionId"`
+	RevisionName     string `json:"revisionName"`
 }
 
 // END REQUEST
