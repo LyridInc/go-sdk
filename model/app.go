@@ -120,6 +120,7 @@ type ModuleDefinition struct {
 	Language       string               `yaml:"language"`
 	Description    string               `yaml:"description"`
 	Web            string               `yaml:"web"`
+	BuildStep      string               `yaml:"buildStep"`
 	HidePublicURL  bool                 `yaml:"hidePublicURL"`
 	ProjectFolder  string               `yaml:"projectFolder"`
 	PrebuildScript string               `yaml:"prebuildScript"`
