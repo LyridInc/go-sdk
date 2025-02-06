@@ -3,26 +3,26 @@ package model
 import "time"
 
 type StageDefinition struct {
-	Status string
-	Stages map[string]*StageLogs
+	Status string                `json:"status"`
+	Stages map[string]*StageLogs `json:"stages"`
 }
 
 type StageLogs struct {
-	Logs []StageLog
+	Logs []StageLog `json:"logs"`
 }
 
 type StageLog struct {
-	TargetPlatform string
-	TargetRegion   string
-	Status         string
-	JobID          string
-	Messages       []*StageMessage
+	TargetPlatform string          `json:"targetPlatform"`
+	TargetRegion   string          `json:"targetRegion"`
+	Status         string          `json:"status"`
+	JobID          string          `json:"jobId"`
+	Messages       []*StageMessage `json:"messages"`
 }
 
 type StageMessage struct {
-	Time     time.Time
-	Severity string
-	Message  string
+	Time     time.Time `json:"time"`
+	Severity string    `json:"severity"`
+	Message  string    `json:"message"`
 }
 
 func NewStageDefinition() *StageDefinition {
