@@ -1,8 +1,6 @@
 module github.com/LyridInc/go-sdk
 
-go 1.22.0
-
-toolchain go1.22.8
+go 1.24.0
 
 require (
 	github.com/alecthomas/units v0.0.0-20240626203959-61d1e3462e30
