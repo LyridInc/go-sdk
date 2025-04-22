@@ -2,6 +2,42 @@ package model
 
 import "time"
 
+const (
+	PipelineRunningStageStatus  = "RUNNING"
+	PipelineCompleteStageStatus = "COMPLETE"
+	PipelineErrorStageStatus    = "ERROR"
+)
+
+const (
+	PipelinePackageStartedStatus       = "PACKAGE_STARTED"
+	PipelinePackageCompleteStatus      = "PACKAGE_COMPLETE"
+	PipelinePackageErrorStatus         = "PACKAGE_ERROR"
+	PipelineSubmitStartedStatus        = "SUBMIT_STARTED"
+	PipelineSubmitCompleteStatus       = "SUBMIT_COMPLETE"
+	PipelineSubmitErrorStatus          = "SUBMIT_ERROR"
+	PipelineBuildStartedStatus         = "BUILD_STARTED"
+	PipelineBuildCompleteStatus        = "BUILD_COMPLETE"
+	PipelineBuildErrorStatus           = "BUILD_ERROR"
+	PipelinePushingImageStartedStatus  = "PUSHING_IMAGE_STARTED"
+	PipelinePushingImageCompleteStatus = "PUSHING_IMAGE_COMPLETE"
+	PipelinePushingImageErrorStatus    = "PUSHING_IMAGE_ERROR"
+	PipelineDeployStartedStatus        = "DEPLOY_STARTED"
+	PipelineDeployCompleteStatus       = "DEPLOY_COMPLETE"
+	PipelineDeployErrorStatus          = "DEPLOY_ERROR"
+	PipelinePodSpawningStartedStatus   = "POD_SPAWNING_STARTED"
+	PipelinePodSpawningCompleteStatus  = "POD_SPAWNING_COMPLETE"
+	PipelinePodSpawningErrorStatus     = "POD_SPAWNING_ERROR"
+)
+
+const (
+	PipelinePackageStage      = "PACKAGE"
+	PipelineSubmitStage       = "SUBMIT"
+	PipelineBuildStage        = "BUILD"
+	PipelinePushingImageStage = "PUSHING_IMAGE"
+	PipelineDeployStage       = "DEPLOY"
+	PipelinePodSpawningStage  = "POD_SPAWNING"
+)
+
 type StageDefinition struct {
 	Status string                `json:"status"`
 	Stages map[string]*StageLogs `json:"stages"`
