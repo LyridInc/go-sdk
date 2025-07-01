@@ -54,6 +54,8 @@ type ModuleRevision struct {
 	SubmitSizeByte int64 `json:"submitSizeByte"`
 
 	Pipeline *StageDefinition `json:"pipeline"`
+
+	ImageUri string `json:"imageUri"`
 }
 
 type ModuleBuild struct {

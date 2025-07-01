@@ -38,6 +38,12 @@ const (
 	PipelinePodSpawningStage  = "POD_SPAWNING"
 )
 
+const (
+	MessageType            string = "MESSAGE"
+	ErrorType              string = "ERROR"
+	ProgressPercentageType string = "PROGRESSPERCENTAGE"
+)
+
 type StageDefinition struct {
 	Status string                `json:"status"`
 	Stages map[string]*StageLogs `json:"stages"`
@@ -55,10 +61,23 @@ type StageLog struct {
 	Messages       []*StageMessage `json:"messages"`
 }
 
+type StageMessageDetail struct {
+	Subject            string `json:"subject"`
+	Message            string `json:"message"`
+	ProgressPercentage string `json:"progressPercentage"`
+}
+
 type StageMessage struct {
-	Time     time.Time `json:"time"`
-	Severity string    `json:"severity"`
-	Message  string    `json:"message"`
+	Time     time.Time          `json:"time"`
+	Severity string             `json:"severity"`
+	Message  string             `json:"message"`
+	Detail   StageMessageDetail `json:"detail"`
+}
+
+type RevisionLogContext struct {
+	RevisionId string
+	JobId      string
+	Stage      string
 }
 
 func NewStageDefinition() *StageDefinition {
