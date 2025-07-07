@@ -98,6 +98,7 @@ type AppDefinition struct {
 	ObjectStorage ObjectStorageDefinition `yaml:"objectStorage"`
 	Resources     []ResourcesDefinition   `yaml:"resources"`
 	Spec          []SpecDefinition        `yaml:"spec"`
+	Operator      bool                    `yaml:"operator"`
 }
 
 type ResourcesDefinition struct {
