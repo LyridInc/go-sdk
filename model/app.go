@@ -110,6 +110,7 @@ type ResourcesDefinition struct {
 
 type SpecDefinition struct {
 	Replica string `yaml:"replica"`
+	RevisionHistoryLimit *int32 `yaml:"revisionHistoryLimit,omitempty"`
 }
 
 type ResourceList struct {
