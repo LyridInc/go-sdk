@@ -148,6 +148,7 @@ type KVPairStandard struct {
 type VolumeDefinition struct {
 	Alias     string `yaml:"alias"`
 	MountPath string `yaml:"mountPath"`
+	StorageClass string `json:"storageClass" yaml:"storageClass"`
 }
 
 type PortDefinition struct {
