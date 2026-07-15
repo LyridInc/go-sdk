@@ -83,6 +83,7 @@ type FunctionCode struct {
 	CreationTime    time.Time `json:"creationTime"`
 	CodeUri         string    `json:"codeUri"`
 	ImageUri        string    `json:"imageUri"`
+	Architectures   []string  `json:"architectures"`
 
 	ArtifactSizeByte int64 `json:"artifactSizeByte"`
 }
@@ -109,7 +110,7 @@ type ResourcesDefinition struct {
 }
 
 type SpecDefinition struct {
-	Replica string `yaml:"replica"`
+	Replica              string `yaml:"replica"`
 	RevisionHistoryLimit *int32 `yaml:"revisionHistoryLimit,omitempty"`
 }
 
@@ -122,6 +123,7 @@ type ModuleDefinition struct {
 	ID             string               `json:"id"`
 	Name           string               `yaml:"name"`
 	Language       string               `yaml:"language"`
+	Architectures  []string             `yaml:"architectures" json:"architectures"`
 	Description    string               `yaml:"description"`
 	Web            string               `yaml:"web"`
 	BuildStep      string               `yaml:"buildStep"`
@@ -146,8 +148,8 @@ type KVPairStandard struct {
 }
 
 type VolumeDefinition struct {
-	Alias     string `yaml:"alias"`
-	MountPath string `yaml:"mountPath"`
+	Alias        string `yaml:"alias"`
+	MountPath    string `yaml:"mountPath"`
 	StorageClass string `json:"storageClass" yaml:"storageClass"`
 }
 
